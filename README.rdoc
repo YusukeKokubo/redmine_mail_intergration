@@ -1,0 +1,4 @@
+= redmine_mail_intergration
+
+メールのMessageIDをDB上で管理して、Redmineに依存しないメール連携ができるようになります。
+
