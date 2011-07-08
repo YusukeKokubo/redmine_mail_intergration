@@ -1,4 +1,11 @@
 = redmine_mail_intergration
 
-���[����MessageID��DB��ŊǗ����āARedmine�Ɉˑ����Ȃ����[���A�g���ł���悤�ɂȂ�܂��B
+メールのMessageIDをDB上で管理して、Redmineに依存しないメール連携ができるようになります。
 
+http://d.hatena.ne.jp/coolstyle/20110708/1310100053
+
+== install
+
+rake db:migrate_plugins RAILS_ENV=production
+(テーブルを追加するだけなので危険は少ないです)
+あとは適切にrake redmine:email:receive_pop3してください。
