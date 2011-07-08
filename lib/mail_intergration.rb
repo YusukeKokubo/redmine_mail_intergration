@@ -15,6 +15,7 @@ module MailIntergrationPatch
       # なぜかrakeタスクがここらへんの設定をしてくれないのでここで設定する
       @keywords ||= {}
       %w(project status tracker category priority).each { |a| @keywords[a.to_sym] = ENV[a] if ENV[a] }
+      @keywords[:tracker] = Tracker.find(ENV['tracker_id']).name if ENV['tracker_id']
 
       unless email.in_reply_to or email.references
         issue = dispatch_without_more_intergration
