@@ -20,8 +20,8 @@ module MailIntergrationPatch
         issue = dispatch_without_more_intergration
         return unless issue
       else
-        msg = MailMessage.find_by_message_id(email.in_reply_to)
-        msg = MailMessage.find_by_message_id(email.references) unless msg
+        msg = MailMessage.find_by_message_id_and_username(email.in_reply_to, ENV['username'])
+        msg = MailMessage.find_by_message_id_and_username(email.references, ENV['username']) unless msg
 
         if msg
           journal = receive_issue_reply(msg.issue_id)
@@ -32,9 +32,10 @@ module MailIntergrationPatch
         end
       end
 
-      msg = MailMessage.find_by_message_id(email.message_id) || MailMessage.new
+      msg = MailMessage.find_by_message_id_and_username(email.message_id, ENV['username']) || MailMessage.new
       msg.message_id = email.message_id
       msg.issue_id = issue.id
+      msg.username = ENV['username']
       msg.save!
     end
   end
