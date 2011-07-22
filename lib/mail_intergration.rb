@@ -17,19 +17,25 @@ module MailIntergrationPatch
       %w(project status tracker category priority).each { |a| @keywords[a.to_sym] = ENV[a] if ENV[a] }
       @keywords[:tracker] = Tracker.find(ENV['tracker_id']).name if ENV['tracker_id']
 
-      unless email.in_reply_to or email.references
-        issue = dispatch_without_more_intergration
-        return unless issue
+      if email.subject =~ /#(\d+)/
+        # replyの場合は注記したいだけなのでプロパティの変更は認めない
+        @keywords = {}
+        issue = receive_issue_reply($1.to_i)
       else
-        msg = MailMessage.find_by_message_id_and_username(email.in_reply_to, ENV['username'])
-        msg = MailMessage.find_by_message_id_and_username(email.references, ENV['username']) unless msg
-
-        if msg
-          journal = receive_issue_reply(msg.issue_id)
-          issue = journal.issue
-        else
+        unless email.in_reply_to or email.references
           issue = dispatch_without_more_intergration
           return unless issue
+        else
+          msg = MailMessage.find_by_message_id_and_username(email.in_reply_to, ENV['username'])
+          msg = MailMessage.find_by_message_id_and_username(email.references, ENV['username']) unless msg
+
+          if msg
+            journal = receive_issue_reply(msg.issue_id)
+            issue = journal.issue
+          else
+            issue = dispatch_without_more_intergration
+            return unless issue
+          end
         end
       end
 
