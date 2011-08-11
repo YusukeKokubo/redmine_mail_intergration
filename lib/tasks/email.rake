@@ -89,6 +89,7 @@ END_DESC
                         :password => user['password'],
                         :delete_unprocessed => ENV['delete_unprocessed']}
 
+        ENV['username'] = user['username']
         options = { :issue => {} }
         %w(project status tracker category priority).each { |a| 
           options[:issue][a.to_sym] = ENV[a] if ENV[a] 
