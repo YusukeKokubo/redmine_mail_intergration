@@ -17,7 +17,7 @@ module MailIntergrationPatch
       %w(project status tracker category priority).each { |a| @keywords[a.to_sym] = ENV[a] if ENV[a] }
       @keywords[:tracker] = Tracker.find(ENV['tracker_id']).name if ENV['tracker_id']
 
-      if email.subject =~ /#(\d+)/
+      if email.subject.toutf8 =~ /#(\d+)/
         # replyの場合は注記したいだけなのでプロパティの変更は認めない
         @keywords = {}
         journal = receive_issue_reply($1.to_i)
