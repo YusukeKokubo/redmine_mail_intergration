@@ -20,7 +20,8 @@ module MailIntergrationPatch
       if email.subject =~ /#(\d+)/
         # replyの場合は注記したいだけなのでプロパティの変更は認めない
         @keywords = {}
-        issue = receive_issue_reply($1.to_i)
+        journal = receive_issue_reply($1.to_i)
+        issue = journal.issue
       else
         unless email.in_reply_to or email.references
           issue = dispatch_without_more_intergration
