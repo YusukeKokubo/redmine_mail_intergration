@@ -13,16 +13,24 @@ module MailIntergrationPatch
 
   module InstanceMethods
     def dispatch_with_more_integration
-      if email.in_reply_to
-        msg = MailMessage.find_by_message_id_and_username(email.in_reply_to, ENV['username'])
-      elsif email.references
-        msg = MailMessage.find_by_message_id_and_username(email.references, ENV['username'])
+      issue_id = false
+      if email.subject.to_s =~ /#(\d+)/
+        issue_id = $1.to_i
       else
         msg = false
+        if email.in_reply_to
+          msg = MailMessage.find_by_message_id_and_username(email.in_reply_to, ENV['username'])
+        end
+        if email.references
+          msg ||= MailMessage.find_by_message_id_and_username(email.references, ENV['username'])
+        end
+        if msg
+          issue_id = msg.issue_id
+        end
       end
 
-      if msg
-        journal = receive_issue_reply(msg.issue_id)
+      if issue_id
+        journal = receive_issue_reply(issue_id)
         issue = journal.issue
       else
         journal_or_issue = dispatch_without_more_integration
