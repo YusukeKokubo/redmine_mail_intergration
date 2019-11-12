@@ -3,7 +3,7 @@ require_dependency 'mail_intergration'
 
 Redmine::Plugin.register :mail_intergration do
   name 'Redmine mail intergration plugin'
-  author 'Masatoshi TSUCHIYA'
+  author 'Yusuke Kokubo'
   description 'more mail intergration than redmine receive email.'
   version '0.0.2'
   requires_redmine :version_or_higher => '4.0'
