@@ -14,7 +14,7 @@ module MailIntergrationPatch
   module InstanceMethods
     def dispatch_with_more_integration
       issue_id = false
-      if email.subject.to_s =~ /#(\d+)/
+      if email.subject.tr('＃０-９', '#0-9').to_s =~ /#(\d+)/
         issue_id = $1.to_i
       else
         msg = false
